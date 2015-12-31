@@ -1,46 +1,70 @@
-﻿
+﻿// 2015-12-31 Joe Audette refactored this as an instance class based on the very similar but platform specific
+// static helpers that we had in mojoportal and currently have in cloudscribe
+
+// next step will be to make the cloudscribe repository implementations use the new instance class and migrate away from
+// the old platform specific static helpers
+// some platform versions have extra methods or may have need of overriding some of these methods
+// maybe could implement FirebirdHelper to inherit from AdoHelper but add methods and/or override them if needed
+
+// back in mvc 5 this DbProviderFactories was configured in web.config
+// and glimpse was able to wrap around it for tracking ado queries
+//var factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
+// need to figure out how to make this ado code glimpse friendly
+// so that glimpse can track the queries.
+// I see clues how glimpse hooks into EF here: 
+//https://github.com/Glimpse/Glimpse.Prototype/blob/dev/src/Glimpse.Agent.Dnx/Internal/Inspectors/EF/EFDiagnosticsInspector.cs
+// and I've asked a question here:
+// https://github.com/Glimpse/Glimpse.Prototype/issues/99
+
+// my best guess of what ado.net glimpse integration will look like whenever it gets implemented is
+// some wrapper around DbProviderFactory in a decorator patern to track the queries.
+// so this new instance class with DbProviderFactory passed in should be ready for Glimpse if I am correct
+
+// not sure at the moment if DbProviderFactory should be added to services in startup and injected
+// or if the platform specific repositories should create and pass in the one the need (will do this for now)
+
+// if it were injected would there be a problem to use multiple factories so that different features can use different db platforms
+// in that case how could we make sure each repository got the specific DbProviderFactory it needs and not the wrong one that was meant for
+// a different feature.
+
+
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
-
-namespace cloudscribe.DbHelpers.pgsql
+namespace cloudscribe.DbHelpers
 {
-    public static class AdoHelper
+    public class AdoHelper
     {
-        private static DbProviderFactory GetFactory()
+        public AdoHelper(DbProviderFactory factory)
         {
-            //var factory = DbProviderFactories.GetFactory("Npgsql");
-
-            //return factory;
-            return Npgsql.NpgsqlFactory.Instance;
+            this.factory = factory;
         }
 
+        private DbProviderFactory factory;
 
-        private static DbConnection GetConnection(string connectionString)
-        {
-            var factory = GetFactory();
+        #region Private Methods
+
+        private DbConnection GetConnection(string connectionString)
+        { 
             var connection = factory.CreateConnection();
             connection.ConnectionString = connectionString;
-
             return connection;
         }
 
-
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private static void PrepareCommand(
-            DbCommand command,
-            DbConnection connection,
-            DbTransaction transaction,
-            CommandType commandType,
-            string commandText,
-            DbParameter[] commandParameters)
+        private void PrepareCommand(
+           DbCommand command,
+           DbConnection connection,
+           DbTransaction transaction,
+           CommandType commandType,
+           string commandText,
+           DbParameter[] commandParameters)
         {
-            if (command == null) throw new ArgumentNullException("command");
-            if (string.IsNullOrEmpty(commandText)) throw new ArgumentNullException("commandText");
+            if (command == null) { throw new ArgumentNullException("command"); }
+            if (string.IsNullOrEmpty(commandText)) { throw new ArgumentNullException("commandText"); }
 
             command.CommandType = commandType;
             command.CommandText = commandText;
@@ -48,16 +72,16 @@ namespace cloudscribe.DbHelpers.pgsql
 
             if (transaction != null)
             {
-                if (transaction.Connection == null) throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction");
+                if (transaction.Connection == null) { throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction"); }
                 command.Transaction = transaction;
             }
 
             if (commandParameters != null) { AttachParameters(command, commandParameters); }
         }
 
-        private static void AttachParameters(DbCommand command, DbParameter[] commandParameters)
+        private void AttachParameters(DbCommand command, DbParameter[] commandParameters)
         {
-            if (command == null) throw new ArgumentNullException("command");
+            if (command == null) { throw new ArgumentNullException("command"); }
             if (commandParameters != null)
             {
                 foreach (DbParameter p in commandParameters)
@@ -70,23 +94,16 @@ namespace cloudscribe.DbHelpers.pgsql
                         {
                             p.Value = DBNull.Value;
                         }
-
                         command.Parameters.Add(p);
                     }
                 }
             }
         }
 
-        
-        public static int ExecuteNonQuery(
-            string connectionString,
-            string commandText,
-            params DbParameter[] commandParameters)
-        {
-            return ExecuteNonQuery(connectionString, CommandType.Text, commandText, commandParameters);
-        }
 
-        public static int ExecuteNonQuery(
+        #endregion
+
+        public int ExecuteNonQuery(
             string connectionString,
             CommandType commandType,
             string commandText,
@@ -94,37 +111,45 @@ namespace cloudscribe.DbHelpers.pgsql
         {
             int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
 
-            return ExecuteNonQuery(connectionString, commandType, commandText, commandTimeout, commandParameters);
-
+            return ExecuteNonQuery(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters
+                );
 
         }
 
-
-
-        public static int ExecuteNonQuery(
+        public int ExecuteNonQuery(
             string connectionString,
             CommandType commandType,
             string commandText,
             int commandTimeout,
             params DbParameter[] commandParameters)
         {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
-
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
+            
             using (DbConnection connection = GetConnection(connectionString))
             {
                 connection.Open();
                 using (DbCommand command = factory.CreateCommand())
                 {
-                    PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
+                    PrepareCommand(
+                        command, 
+                        connection,
+                        null, //DbTransaction
+                        commandType, 
+                        commandText, 
+                        commandParameters);
+
                     command.CommandTimeout = commandTimeout;
                     return command.ExecuteNonQuery();
                 }
             }
         }
 
-        public static int ExecuteNonQuery(
+        public int ExecuteNonQuery(
             DbTransaction transaction,
             CommandType commandType,
             string commandText,
@@ -137,7 +162,7 @@ namespace cloudscribe.DbHelpers.pgsql
 
         }
 
-        public static int ExecuteNonQuery(
+        public int ExecuteNonQuery(
             DbTransaction transaction,
             CommandType commandType,
             string commandText,
@@ -145,10 +170,8 @@ namespace cloudscribe.DbHelpers.pgsql
             params DbParameter[] commandParameters)
         {
             if (transaction == null) throw new ArgumentNullException("transaction");
-            if (transaction != null && transaction.Connection == null) throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction");
-
-            DbProviderFactory factory = GetFactory();
-
+            if (transaction != null && transaction.Connection == null) { throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction"); }
+            
             using (DbCommand command = factory.CreateCommand())
             {
                 PrepareCommand(
@@ -165,27 +188,26 @@ namespace cloudscribe.DbHelpers.pgsql
             }
         }
 
-        public static async Task<int> ExecuteNonQueryAsync(
+        public async Task<int> ExecuteNonQueryAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
 
             return await ExecuteNonQueryAsync(
-                connectionString, 
-                commandType, 
-                commandText, 
-                commandTimeout, 
+                connectionString,
+                commandType,
+                commandText,
+                commandTimeout,
                 commandParameters,
                 cancellationToken);
 
-
         }
 
-        public static async Task<int> ExecuteNonQueryAsync(
+        public async Task<int> ExecuteNonQueryAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
@@ -193,56 +215,78 @@ namespace cloudscribe.DbHelpers.pgsql
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
-
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
+            
             using (DbConnection connection = GetConnection(connectionString))
             {
                 connection.Open();
                 using (DbCommand command = factory.CreateCommand())
                 {
-                    PrepareCommand(command, connection, null, commandType, commandText, commandParameters);
+                    PrepareCommand(
+                        command, 
+                        connection, 
+                        null, 
+                        commandType, 
+                        commandText, 
+                        commandParameters
+                        );
                     command.CommandTimeout = commandTimeout;
                     return await command.ExecuteNonQueryAsync(cancellationToken);
                 }
             }
         }
 
-        public static DbDataReader ExecuteReader(
-            string connectionString,
+        public async Task<int> ExecuteNonQueryAsync(
+            DbTransaction transaction,
+            CommandType commandType,
             string commandText,
-            params DbParameter[] commandParameters)
+            int commandTimeout,
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (transaction == null) throw new ArgumentNullException("transaction");
+            if (transaction != null && transaction.Connection == null) { throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction"); }
 
-            return ExecuteReader(connectionString, CommandType.Text, commandText, commandParameters);
+            using (DbCommand command = factory.CreateCommand())
+            {
+                PrepareCommand(
+                    command,
+                    transaction.Connection,
+                    transaction,
+                    commandType,
+                    commandText,
+                    commandParameters);
 
+                command.CommandTimeout = commandTimeout;
 
+                return await command.ExecuteNonQueryAsync(cancellationToken);
+            }
         }
 
-        public static DbDataReader ExecuteReader(
+        public DbDataReader ExecuteReader(
             string connectionString,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)
         {
             int commandTimeout = 30; //30 seconds default
-            return ExecuteReader(connectionString, commandType, commandText, commandTimeout, commandParameters);
-
-
+            return ExecuteReader(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters);
         }
 
-        public static DbDataReader ExecuteReader(
+        public DbDataReader ExecuteReader(
             string connectionString,
             CommandType commandType,
             string commandText,
             int commandTimeout,
             params DbParameter[] commandParameters)
         {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
-
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
+            
             // we cannot wrap this connection in a using
             // we need to let the reader close it at using(IDataReader reader = ...
             // otherwise it gets closed before the reader can use it
@@ -268,7 +312,6 @@ namespace cloudscribe.DbHelpers.pgsql
                     return command.ExecuteReader(CommandBehavior.CloseConnection);
                 }
 
-
             }
             catch
             {
@@ -277,7 +320,9 @@ namespace cloudscribe.DbHelpers.pgsql
             }
         }
 
-        public static async Task<DbDataReader> ExecuteReaderAsync(
+
+
+        public async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
@@ -286,17 +331,15 @@ namespace cloudscribe.DbHelpers.pgsql
         {
             int commandTimeout = 30; //30 seconds default
             return await ExecuteReaderAsync(
-                connectionString, 
-                commandType, 
-                commandText, 
-                commandTimeout, 
+                connectionString,
+                commandType,
+                commandText,
+                commandTimeout,
                 commandParameters,
                 cancellationToken);
-
-
         }
 
-        public static async Task<DbDataReader> ExecuteReaderAsync(
+        public async Task<DbDataReader> ExecuteReaderAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
@@ -304,9 +347,7 @@ namespace cloudscribe.DbHelpers.pgsql
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
 
             // we cannot wrap this connection in a using
             // we need to let the reader close it at using(IDataReader reader = ...
@@ -330,10 +371,10 @@ namespace cloudscribe.DbHelpers.pgsql
 
                     command.CommandTimeout = commandTimeout;
 
-                    return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
+                    DbDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
+
+                    return reader;
                 }
-
-
             }
             catch
             {
@@ -341,45 +382,46 @@ namespace cloudscribe.DbHelpers.pgsql
                 throw;
             }
         }
+        
 
-        public static object ExecuteScalar(
-            string connectionString,
-            string commandText,
-            params DbParameter[] commandParameters)
-        {
-            return ExecuteScalar(connectionString, CommandType.Text, commandText, commandParameters);
-
-        }
-
-        public static object ExecuteScalar(
+        public object ExecuteScalar(
             string connectionString,
             CommandType commandType,
             string commandText,
             params DbParameter[] commandParameters)
         {
             int commandTimeout = 30; //30 seconds default
-            return ExecuteScalar(connectionString, commandType, commandText, commandTimeout, commandParameters);
-
+            return ExecuteScalar(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters);
 
         }
 
-        public static object ExecuteScalar(
+        public object ExecuteScalar(
             string connectionString,
             CommandType commandType,
             string commandText,
             int commandTimeout,
             params DbParameter[] commandParameters)
         {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
-
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
+            
             using (DbConnection connection = GetConnection(connectionString))
             {
                 connection.Open();
                 using (DbCommand command = factory.CreateCommand())
                 {
-                    PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
+                    PrepareCommand(
+                        command, 
+                        connection, 
+                        (DbTransaction)null, 
+                        commandType, 
+                        commandText, 
+                        commandParameters);
+
                     command.CommandTimeout = commandTimeout;
 
                     return command.ExecuteScalar();
@@ -387,7 +429,7 @@ namespace cloudscribe.DbHelpers.pgsql
             }
         }
 
-        public static async Task<object> ExecuteScalarAsync(
+        public async Task<object> ExecuteScalarAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
@@ -396,17 +438,16 @@ namespace cloudscribe.DbHelpers.pgsql
         {
             int commandTimeout = 30; //30 seconds default
             return await ExecuteScalarAsync(
-                connectionString, 
-                commandType, 
-                commandText, 
-                commandTimeout, 
+                connectionString,
+                commandType,
+                commandText,
+                commandTimeout,
                 commandParameters,
                 cancellationToken);
 
-
         }
 
-        public static async Task<object> ExecuteScalarAsync(
+        public async Task<object> ExecuteScalarAsync(
             string connectionString,
             CommandType commandType,
             string commandText,
@@ -414,22 +455,29 @@ namespace cloudscribe.DbHelpers.pgsql
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
-
-            DbProviderFactory factory = GetFactory();
-
+            if (connectionString == null || connectionString.Length == 0) { throw new ArgumentNullException("connectionString"); }
+            
             using (DbConnection connection = GetConnection(connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 using (DbCommand command = factory.CreateCommand())
                 {
-                    PrepareCommand(command, connection, (DbTransaction)null, commandType, commandText, commandParameters);
+                    PrepareCommand(
+                        command, 
+                        connection, 
+                        (DbTransaction)null, 
+                        commandType, 
+                        commandText, 
+                        commandParameters);
                     command.CommandTimeout = commandTimeout;
 
                     return await command.ExecuteScalarAsync(cancellationToken);
                 }
             }
         }
-        
+
+
+
     }
+
 }

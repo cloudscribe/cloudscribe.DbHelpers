@@ -62,6 +62,7 @@ namespace cloudscribe.DbHelpers.SQLite
             if (commandParameters != null) { AttachParameters(command, commandParameters); }
         }
 
+        // do we really need SqliteCommand here instead of DbCommand?
         private static void AttachParameters(SqliteCommand command, DbParameter[] commandParameters)
         {
             if (command == null) throw new ArgumentNullException("command");
@@ -130,6 +131,7 @@ namespace cloudscribe.DbHelpers.SQLite
             }
         }
 
+        // do we really need SqliteTransaction here instead of DbTransaction?
         public static int ExecuteNonQuery(
             SqliteTransaction transaction,
             CommandType commandType,
@@ -143,6 +145,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
         }
 
+        // do we really need SqliteTransaction here instead of DbTransaction?
         public static int ExecuteNonQuery(
             SqliteTransaction transaction,
             CommandType commandType,
@@ -154,7 +157,7 @@ namespace cloudscribe.DbHelpers.SQLite
             if (transaction != null && transaction.Connection == null) throw new ArgumentException("The transaction was rollbacked or commited, please provide an open transaction.", "transaction");
 
             var factory = GetFactory();
-
+            // do we really need to declare this as SqliteCommand rather than DbCommand
             using (SqliteCommand command = factory.CreateCommand())
             {
                 PrepareCommand(
@@ -171,8 +174,12 @@ namespace cloudscribe.DbHelpers.SQLite
             }
         }
 
+        // do we really need sqlite specific types here?
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        public static int ExecuteNonQuery(SqliteConnection connection, string commandText, params DbParameter[] parameters)
+        public static int ExecuteNonQuery(
+            SqliteConnection connection, 
+            string commandText, 
+            params DbParameter[] parameters)
         {
             using (SqliteCommand cmd = new SqliteCommand())
             {
@@ -274,7 +281,11 @@ namespace cloudscribe.DbHelpers.SQLite
             string commandText,
             params DbParameter[] commandParameters)
         {
-            return ExecuteScalar(connectionString, CommandType.Text, commandText, commandParameters);
+            return ExecuteScalar(
+                connectionString, 
+                CommandType.Text, 
+                commandText, 
+                commandParameters);
 
         }
 
@@ -285,7 +296,12 @@ namespace cloudscribe.DbHelpers.SQLite
             params DbParameter[] commandParameters)
         {
             int commandTimeout = 30; //30 seconds default
-            return ExecuteScalar(connectionString, commandType, commandText, commandTimeout, commandParameters);
+            return ExecuteScalar(
+                connectionString, 
+                commandType, 
+                commandText, 
+                commandTimeout, 
+                commandParameters);
 
 
         }
@@ -306,7 +322,14 @@ namespace cloudscribe.DbHelpers.SQLite
                 connection.Open();
                 using (SqliteCommand command = factory.CreateCommand())
                 {
-                    PrepareCommand(command, connection, (SqliteTransaction)null, commandType, commandText, commandParameters);
+                    PrepareCommand(
+                        command, 
+                        connection, 
+                        (SqliteTransaction)null, 
+                        commandType, 
+                        commandText, 
+                        commandParameters);
+
                     command.CommandTimeout = commandTimeout;
 
                     return command.ExecuteScalar();

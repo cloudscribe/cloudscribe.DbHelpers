@@ -78,6 +78,7 @@ namespace cloudscribe.DbHelpers.SqlCe
             }
         }
 
+        // this is sqlce specific
         public static object DoInsertGetIdentitiy(
             string connectionString,
             CommandType commandType,

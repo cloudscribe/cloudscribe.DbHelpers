@@ -144,9 +144,9 @@ namespace cloudscribe.DbHelpers.MSSQL
         }
 
         private void DefineSqlParameter(
-            String paramName,
+            string paramName,
             SqlDbType type,
-            String typeName,
+            string typeName,
             int size,
             byte precision,
             ParameterDirection dir,

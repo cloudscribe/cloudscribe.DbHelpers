@@ -7,7 +7,7 @@
   "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "owners": [ "Source Tree Solutions" ],
-  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "projectUrl": "https://github.com/joeaudette/cloudscribe.DbHelpers",
   "releaseNotes": "",
   "requireLicenseAcceptance": false,
   "tags": [ "cloudscribe", "firebird", "firebirdsql" ],

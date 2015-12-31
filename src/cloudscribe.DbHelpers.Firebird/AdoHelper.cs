@@ -32,6 +32,7 @@ namespace cloudscribe.DbHelpers.Firebird
             return connection;
         }
 
+        // firebird specific function
         public static string GetParamString(Int32 count)
         {
             if (count <= 1) { return count < 1 ? "" : "?"; }
@@ -64,7 +65,7 @@ namespace cloudscribe.DbHelpers.Firebird
             {
                 AttachParameters(command, commandParameters);
             }
-            return;
+            //return;
         }
 
         private static void AttachParameters(DbCommand command, DbParameter[] commandParameters)
@@ -88,6 +89,7 @@ namespace cloudscribe.DbHelpers.Firebird
             }
         }
 
+        //firebird specific
         public static bool ExecuteBatchScript(
             string connectionString,
             string pathToScriptFile)
@@ -402,6 +404,8 @@ namespace cloudscribe.DbHelpers.Firebird
             {
                 connection.Open();
                 DbTransaction transaction = null;
+                // this is specific to this firebird implementation
+                //
                 bool useTransaction = (commandText.Contains("EXECUTE") || commandText.Contains("INSERT"));
                 if (useTransaction) { transaction = connection.BeginTransaction(); }
 

@@ -22,6 +22,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SqlCe
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SQLite", "src\cloudscribe.DbHelpers.SQLite\cloudscribe.DbHelpers.SQLite.xproj", "{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Ado", "src\cloudscribe.DbHelpers.Ado\cloudscribe.DbHelpers.Ado.xproj", "{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,5 +69,6 @@ Global
 		{EF22969B-1A63-4724-99ED-7080AF9E966C} = {FEEA78D0-FFAF-4757-B45D-1B852DFD7608}
 		{E59FC2F0-6808-4502-98BC-90E5C16CCFF9} = {FEEA78D0-FFAF-4757-B45D-1B852DFD7608}
 		{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B} = {FEEA78D0-FFAF-4757-B45D-1B852DFD7608}
+		{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0} = {FEEA78D0-FFAF-4757-B45D-1B852DFD7608}
 	EndGlobalSection
 EndGlobal

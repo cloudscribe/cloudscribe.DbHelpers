@@ -1,11 +1,11 @@
 {
-    "version": "1.0.0-beta1",
-    "title": "cloudscribe.DbHelpers.SQLite",
+  "version": "1.0.0-beta1",
+  "title": "cloudscribe.DbHelpers.SQLite",
   "description": "cloudscribe database helpers for SQLite.",
   "authors": [ "Joe Audette" ],
   "owners": [ "Source Tree Solutions" ],
-  "tags": [ "cloudscribe","sqlite" ],
-  "projectUrl": "https://github.com/joeaudette/cloudscribe",
+  "tags": [ "cloudscribe", "sqlite" ],
+  "projectUrl": "https://github.com/joeaudette/cloudscribe.DbHelpers",
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
   "copyright": "2015 Source Tree Solutions",
   "iconUrl": "https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png",
@@ -20,16 +20,16 @@
 
   },
 
-    "frameworks": {
-      "net451": { },
-      "dnxcore50": {
-          "dependencies": {
-          "System.Collections": "4.0.11-beta-23516",
-          "System.Linq": "4.0.1-beta-23516",
-          "System.Runtime": "4.0.21-beta-23516",
-          "System.Collections.Concurrent": "4.0.11-beta-23516",
-          "Microsoft.CSharp": "4.0.1-beta-23516"
-        }
+  "frameworks": {
+    "net451": { },
+    "dnxcore50": {
+      "dependencies": {
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Collections.Concurrent": "4.0.11-beta-23516",
+        "Microsoft.CSharp": "4.0.1-beta-23516"
       }
     }
+  }
 }
