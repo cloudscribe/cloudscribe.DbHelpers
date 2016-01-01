@@ -18,7 +18,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.MySql
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SqlCe", "src\cloudscribe.DbHelpers.SqlCe\cloudscribe.DbHelpers.SqlCe.xproj", "{E59FC2F0-6808-4502-98BC-90E5C16CCFF9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SQLite", "src\cloudscribe.DbHelpers.SQLite\cloudscribe.DbHelpers.SQLite.xproj", "{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Sqlite", "src\cloudscribe.DbHelpers.SQLite\cloudscribe.DbHelpers.Sqlite.xproj", "{DDFB41DA-6AA7-4656-A02D-1A41B0E69D0B}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Ado", "src\cloudscribe.DbHelpers.Ado\cloudscribe.DbHelpers.Ado.xproj", "{2A2ECA78-5FAC-4DA7-8279-02209FFDCBD0}"
 EndProject
