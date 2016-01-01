@@ -105,6 +105,8 @@ namespace cloudscribe.DbHelpers
 
         #endregion
 
+        #region ExecuteNonQuery 
+
         public int ExecuteNonQuery(
             string connectionString,
             string commandText,
@@ -385,6 +387,10 @@ namespace cloudscribe.DbHelpers
             }
         }
 
+        #endregion
+
+        #region ExecuteReader
+
         public DbDataReader ExecuteReader(
             string connectionString,
             string commandText,
@@ -446,7 +452,21 @@ namespace cloudscribe.DbHelpers
 
                     command.CommandTimeout = commandTimeout;
 
-                    return command.ExecuteReader(CommandBehavior.CloseConnection);
+                    // 2015-11-10 CommandBehavior.CloseConnection throws exception
+                    // should be fixed either in rc1 rc2 or 1.0.0
+                    //https://github.com/aspnet/Microsoft.Data.Sqlite/pull/169
+
+                    try
+                    {
+                        return command.ExecuteReader(CommandBehavior.CloseConnection);
+                    }
+                    catch(ArgumentException)
+                    {
+                        return command.ExecuteReader(CommandBehavior.Default);
+                    }
+                    
+
+                    
                 }
 
             }
@@ -519,6 +539,8 @@ namespace cloudscribe.DbHelpers
                 throw;
             }
         }
+
+        #endregion
 
         public object ExecuteScalar(
             string connectionString,
