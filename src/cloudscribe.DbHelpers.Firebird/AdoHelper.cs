@@ -142,6 +142,8 @@ namespace cloudscribe.DbHelpers.Firebird
             return ExecuteNonQuery(connectionString, CommandType.Text, commandText, commandParameters);
         }
 
+        // firebird version needs a transaction here
+        // that was not needed for other adohelpers
         public static int ExecuteNonQuery(
             string connectionString,
             CommandType commandType,
