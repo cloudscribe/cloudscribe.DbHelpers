@@ -1,7 +1,7 @@
 ﻿// 2015-12-31 Joe Audette refactored this as an instance class based on the very similar but platform specific
 // static helpers that we had in mojoportal and currently have in cloudscribe
 
-//Last Modified:    2016-01-01
+//Last Modified:    2016-01-02
 
 // next step will be to make the cloudscribe repository implementations use the new instance class and migrate away from
 // the old platform specific static helpers
@@ -338,8 +338,8 @@ namespace cloudscribe.DbHelpers
                 {
                     PrepareCommand(
                         command, 
-                        connection, 
-                        null, 
+                        connection,
+                        transaction, 
                         commandType, 
                         commandText, 
                         commandParameters
@@ -440,8 +440,11 @@ namespace cloudscribe.DbHelpers
                 connection = GetConnection(connectionString);
 
                 connection.Open();
-                using (DbCommand command = factory.CreateCommand())
-                {
+
+                DbCommand command = factory.CreateCommand();
+                // this using was causing the connection to be closed before reader could read with firebird
+                //using (DbCommand command = factory.CreateCommand())
+                //{
                     PrepareCommand(
                         command,
                         connection,
@@ -450,7 +453,11 @@ namespace cloudscribe.DbHelpers
                         commandText,
                         commandParameters);
 
+                if(commandTimeout != 30)
+                {
                     command.CommandTimeout = commandTimeout;
+                }
+                    
 
                     // 2015-11-10 CommandBehavior.CloseConnection throws exception
                     // should be fixed either in rc1 rc2 or 1.0.0
@@ -467,7 +474,7 @@ namespace cloudscribe.DbHelpers
                     
 
                     
-                }
+                //}
 
             }
             catch
@@ -516,8 +523,10 @@ namespace cloudscribe.DbHelpers
                 connection = GetConnection(connectionString);
 
                 connection.Open();
-                using (DbCommand command = factory.CreateCommand())
-                {
+                DbCommand command = factory.CreateCommand();
+                //with firebird this using was causing the conneciton to be closed before the reader could read
+                //using (DbCommand command = factory.CreateCommand())
+                //{
                     PrepareCommand(
                         command,
                         connection,
@@ -526,12 +535,16 @@ namespace cloudscribe.DbHelpers
                         commandText,
                         commandParameters);
 
+                if(commandTimeout != 30)
+                {
                     command.CommandTimeout = commandTimeout;
+                }
+                    
 
                     DbDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection, cancellationToken);
 
                     return reader;
-                }
+                //}
             }
             catch
             {
@@ -632,8 +645,8 @@ namespace cloudscribe.DbHelpers
                 {
                     PrepareCommand(
                         command, 
-                        connection, 
-                        (DbTransaction)null, 
+                        connection,
+                        transaction, 
                         commandType, 
                         commandText, 
                         commandParameters);
