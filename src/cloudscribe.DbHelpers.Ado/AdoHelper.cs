@@ -249,6 +249,27 @@ namespace cloudscribe.DbHelpers
 
         public async Task<int> ExecuteNonQueryAsync(
             string connectionString,
+            string commandText,
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+            bool useTransaction = false;
+
+            return await ExecuteNonQueryAsync(
+                connectionString,
+                CommandType.Text,
+                commandText,
+                commandTimeout,
+                useTransaction,
+                commandParameters,
+                cancellationToken
+                );
+
+        }
+
+        public async Task<int> ExecuteNonQueryAsync(
+            string connectionString,
             CommandType commandType,
             string commandText,
             DbParameter[] commandParameters,
@@ -484,6 +505,21 @@ namespace cloudscribe.DbHelpers
             }
         }
 
+        public async Task<DbDataReader> ExecuteReaderAsync(
+            string connectionString,
+            string commandText,
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int commandTimeout = 30; //30 seconds default
+            return await ExecuteReaderAsync(
+                connectionString,
+                CommandType.Text,
+                commandText,
+                commandTimeout,
+                commandParameters,
+                cancellationToken);
+        }
 
 
         public async Task<DbDataReader> ExecuteReaderAsync(
@@ -666,6 +702,25 @@ namespace cloudscribe.DbHelpers
                     return result;
                 }
             }
+        }
+
+        public async Task<object> ExecuteScalarAsync(
+            string connectionString,
+            string commandText,
+            DbParameter[] commandParameters,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            int commandTimeout = 30; //30 seconds default
+            bool useTransaction = false;
+            return await ExecuteScalarAsync(
+                connectionString,
+                CommandType.Text,
+                commandText,
+                commandTimeout,
+                useTransaction,
+                commandParameters,
+                cancellationToken);
+
         }
 
         public async Task<object> ExecuteScalarAsync(
