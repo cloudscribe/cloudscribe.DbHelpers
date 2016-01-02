@@ -241,7 +241,10 @@ namespace cloudscribe.DbHelpers
                     commandText,
                     commandParameters);
 
-                command.CommandTimeout = commandTimeout;
+                if (commandTimeout != 30)
+                {
+                    command.CommandTimeout = commandTimeout;
+                }
 
                 return command.ExecuteNonQuery();
             }
@@ -365,7 +368,11 @@ namespace cloudscribe.DbHelpers
                         commandText, 
                         commandParameters
                         );
-                    command.CommandTimeout = commandTimeout;
+
+                    if (commandTimeout != 30)
+                    {
+                        command.CommandTimeout = commandTimeout;
+                    }
                     int result = await command.ExecuteNonQueryAsync(cancellationToken);
 
                     if (transaction != null)
@@ -402,7 +409,10 @@ namespace cloudscribe.DbHelpers
                     commandText,
                     commandParameters);
 
-                command.CommandTimeout = commandTimeout;
+                if (commandTimeout != 30)
+                {
+                    command.CommandTimeout = commandTimeout;
+                }
 
                 return await command.ExecuteNonQueryAsync(cancellationToken);
             }
@@ -687,7 +697,12 @@ namespace cloudscribe.DbHelpers
                         commandText, 
                         commandParameters);
 
-                    command.CommandTimeout = commandTimeout;
+                    //ArgumentException: SqlCeCommand.CommandTimeout does not support non-zero values.
+
+                    if (commandTimeout != 30)
+                    {
+                        command.CommandTimeout = commandTimeout;
+                    }
 
                     object result = command.ExecuteScalar();
 
@@ -812,7 +827,11 @@ namespace cloudscribe.DbHelpers
                         commandType, 
                         commandText, 
                         commandParameters);
-                    command.CommandTimeout = commandTimeout;
+
+                    if (commandTimeout != 30)
+                    {
+                        command.CommandTimeout = commandTimeout;
+                    }
 
                     object result = await command.ExecuteScalarAsync(cancellationToken);
 
