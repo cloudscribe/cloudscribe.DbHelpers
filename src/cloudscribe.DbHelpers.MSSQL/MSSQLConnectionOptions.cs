@@ -2,43 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2015-08-05
-// Last Modified:			2015-08-06
+// Last Modified:			2016-01-03
 // 
 
-namespace cloudscribe.DbHelpers.MSSQL
+namespace cloudscribe.DbHelpers
 {
-    public class MSSQLConnectionOptions
+    public class MSSQLConnectionOptions : ConnectionStringOptions
     {
-        private string connectionString = string.Empty;
-
-        public string ConnectionString
-        {
-            get { return connectionString; }
-            set { connectionString = value; }
-        }
-
-        private string readConnectionString = string.Empty;
-
-        public string ReadConnectionString
-        {
-            get {
-                if (readConnectionString.Length > 0) { return readConnectionString; }
-                return connectionString;
-            }
-            set { readConnectionString = value; }
-        }
-
-        private string writeConnectionString = string.Empty;
-
-        public string WriteConnectionString
-        {
-            get {  if(writeConnectionString.Length > 0) { return writeConnectionString; }
-                    return connectionString;   
-                 } 
-            set { writeConnectionString = value; }
-        }
-
-
         public string OwnerPrefix { get; set; } = "[dbo].";
     }
 }

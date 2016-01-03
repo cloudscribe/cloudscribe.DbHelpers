@@ -13,14 +13,11 @@
 // with modifications by Joe Audette
 // Last Modified: 2010-01-27
 
-using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Data;
 using System.Data.SqlClient;
 
 //namespace Microsoft.Practices.EnterpriseLibrary.Data
-namespace cloudscribe.DbHelpers.MSSQL
+namespace cloudscribe.DbHelpers
 {
     /// <devdoc>
     /// CachingMechanism provides caching support for stored procedure 

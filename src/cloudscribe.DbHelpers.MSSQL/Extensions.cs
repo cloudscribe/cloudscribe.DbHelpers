@@ -9,7 +9,7 @@
 
 using System.Data.SqlClient;
 
-namespace cloudscribe.DbHelpers.MSSQL
+namespace cloudscribe.DbHelpers
 {
     public static class Extensions
     {

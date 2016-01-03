@@ -15,21 +15,20 @@
 // 2010-01-27 Joe Audette added parameter cache logic from Enterpise Data Block licensed under Ms-Pl http://www.codeplex.com/entlib
 // Last Modified 2014-08-26 changed to use AdoHelper which allows us to profile with Glimpse ADO
 // 2015-01-07 Joe Audette added async methods
+// 2016-01-03 changed to use common AdoHelper
 
 
 using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-//using System.Configuration;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-//using log4net;
 using Microsoft.Extensions.Logging;
 
 
-namespace cloudscribe.DbHelpers.MSSQL
+namespace cloudscribe.DbHelpers
 {
     public class SqlParameterHelper
     {
@@ -44,7 +43,10 @@ namespace cloudscribe.DbHelpers.MSSQL
         private bool parametersDefined;
         private string connectionString;
         private CommandType cmdType;
+        private AdoHelper AdoHelper;
 
+        // need a way to pass this in
+        private bool useParameterCache = true; // doesn't work in dnxcore50
 
         #region Constructors
 
@@ -60,8 +62,10 @@ namespace cloudscribe.DbHelpers.MSSQL
                 log = loggerFactory.CreateLogger(typeof(SqlParameterHelper).FullName);
             }
             
-            //log = logger;
             Initialize(connectionString, commandText, cmdType, paramCnt);
+
+            // possibly will change this later to have SqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqlClientFactory.Instance);
         }
 
         public SqlParameterHelper(
@@ -77,6 +81,9 @@ namespace cloudscribe.DbHelpers.MSSQL
             
             //log = logger;
             Initialize(connectionString, commandText, CommandType.StoredProcedure, paramCnt);
+
+            // possibly will change this later to have SqlClientFactory/DbProviderFactory injected
+            AdoHelper = new AdoHelper(SqlClientFactory.Instance);
         }
 
         #endregion
@@ -92,7 +99,7 @@ namespace cloudscribe.DbHelpers.MSSQL
 
 # if dnx451
             if (
-                (AppSettings.CacheMSSQLParameters)
+                (useParameterCache)
                 && (cmdType == CommandType.StoredProcedure)
                 )
             {
@@ -123,22 +130,22 @@ namespace cloudscribe.DbHelpers.MSSQL
             BeginDefineSqlParameters();
         }
 
-        public void DefineSqlParameter(String paramName, SqlDbType type, ParameterDirection dir, object value)
+        public void DefineSqlParameter(string paramName, SqlDbType type, ParameterDirection dir, object value)
         {
             DefineSqlParameter(paramName, type, string.Empty, 0, 0, dir, value, false, false);
         }
 
-        public void DefineSqlParameter(String paramName, SqlDbType type, int size, ParameterDirection dir, object value)
+        public void DefineSqlParameter(string paramName, SqlDbType type, int size, ParameterDirection dir, object value)
         {
             DefineSqlParameter(paramName, type, string.Empty, size, 0, dir, value, true, false);
         }
 
-        public void DefineSqlParameter(String paramName, SqlDbType type, int size, byte precision, ParameterDirection dir, object value)
+        public void DefineSqlParameter(string paramName, SqlDbType type, int size, byte precision, ParameterDirection dir, object value)
         {
             DefineSqlParameter(paramName, type, string.Empty, size, precision, dir, value, true, true);
         }
 
-        public void DefineSqlParameter(String paramName, SqlDbType type, String typeName, ParameterDirection dir, object value)
+        public void DefineSqlParameter(string paramName, SqlDbType type, String typeName, ParameterDirection dir, object value)
         {
             DefineSqlParameter(paramName, type, typeName, 0, 0, dir, value, false, false);
         }
@@ -237,7 +244,7 @@ namespace cloudscribe.DbHelpers.MSSQL
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
             if (log != null) log.LogDebug("ExecuteReader " + commandText);
-            return AdoHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, arParams);
+            return AdoHelper.ExecuteNonQuery(connectionString, cmdType, commandText, commandTimeout, false, arParams);
         }
 
         public async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -253,7 +260,13 @@ namespace cloudscribe.DbHelpers.MSSQL
             Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
             //if (debugLog) { log.Debug("ExecuteNonQuery " + commandText); }
             if (log != null) log.LogDebug("ExecuteReader " + commandText);
-            return await AdoHelper.ExecuteNonQueryAsync(connectionString, cmdType, commandText, commandTimeout, arParams, cancellationToken);
+            return await AdoHelper.ExecuteNonQueryAsync(
+                connectionString, 
+                cmdType, 
+                commandText, 
+                commandTimeout, 
+                arParams, 
+                cancellationToken);
         }
 
 

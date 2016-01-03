@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-06-22
-// Last Modified:			2015-11-18
+// Last Modified:			2016-01-03
 // 
 
 using Microsoft.Extensions.OptionsModel;
@@ -30,7 +30,7 @@ namespace cloudscribe.DbHelpers.SqlCe
         private string appBasePath;
         private string pathToDbFile()
         {
-            return appBasePath + "/config/sqlcedb/".Replace("/", Path.DirectorySeparatorChar.ToString()) + options.DbFileName;
+            return appBasePath + options.PathSegment.Replace("/", Path.DirectorySeparatorChar.ToString()) + options.DbFileName;
         }
 
         public string SqlCeFilePath
