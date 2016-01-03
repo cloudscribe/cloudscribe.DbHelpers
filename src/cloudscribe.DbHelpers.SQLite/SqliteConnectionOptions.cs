@@ -15,5 +15,7 @@ namespace cloudscribe.DbHelpers.SQLite
 
         public string ConnectionString { get; set; } = string.Empty;
 
+        public string PathSegment { get; set; } = "/config/sqlitedb/";
+
     }
 }
