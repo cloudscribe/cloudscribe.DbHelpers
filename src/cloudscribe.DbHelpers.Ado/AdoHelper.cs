@@ -47,6 +47,9 @@ namespace cloudscribe.DbHelpers
 
         protected DbProviderFactory factory;
 
+        //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+        private int defaultTimeoutSeconds = 30;
+
         #region Protected Methods
 
         protected DbConnection GetConnection(string connectionString)
@@ -125,7 +128,7 @@ namespace cloudscribe.DbHelpers
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+            int commandTimeout = defaultTimeoutSeconds; 
             bool useTransaction = false;
             return ExecuteNonQuery(
                 connectionString, 
@@ -145,7 +148,7 @@ namespace cloudscribe.DbHelpers
             bool useTransaction,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+            int commandTimeout = defaultTimeoutSeconds; 
 
             return ExecuteNonQuery(
                 connectionString,
@@ -187,7 +190,11 @@ namespace cloudscribe.DbHelpers
                         commandText, 
                         commandParameters);
 
-                    command.CommandTimeout = commandTimeout;
+                    if (commandTimeout != defaultTimeoutSeconds)
+                    {
+                        command.CommandTimeout = commandTimeout;
+                    }
+
                     int result = command.ExecuteNonQuery();
 
                     if (transaction != null)
@@ -209,7 +216,7 @@ namespace cloudscribe.DbHelpers
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
 
             return ExecuteNonQuery(
                 transaction, 
@@ -241,7 +248,7 @@ namespace cloudscribe.DbHelpers
                     commandText,
                     commandParameters);
 
-                if (commandTimeout != 30)
+                if (commandTimeout != defaultTimeoutSeconds)
                 {
                     command.CommandTimeout = commandTimeout;
                 }
@@ -256,7 +263,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+            int commandTimeout = defaultTimeoutSeconds; 
             bool useTransaction = false;
 
             return await ExecuteNonQueryAsync(
@@ -278,7 +285,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+            int commandTimeout = defaultTimeoutSeconds; 
             bool useTransaction = false;
 
             return await ExecuteNonQueryAsync(
@@ -301,7 +308,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default http://msdn.microsoft.com/en-us/library/system.data.sqlclient.sqlcommand.commandtimeout.aspx
+            int commandTimeout = defaultTimeoutSeconds; 
             
             return await ExecuteNonQueryAsync(
                 connectionString,
@@ -369,7 +376,7 @@ namespace cloudscribe.DbHelpers
                         commandParameters
                         );
 
-                    if (commandTimeout != 30)
+                    if (commandTimeout != defaultTimeoutSeconds)
                     {
                         command.CommandTimeout = commandTimeout;
                     }
@@ -409,7 +416,7 @@ namespace cloudscribe.DbHelpers
                     commandText,
                     commandParameters);
 
-                if (commandTimeout != 30)
+                if (commandTimeout != defaultTimeoutSeconds)
                 {
                     command.CommandTimeout = commandTimeout;
                 }
@@ -443,7 +450,7 @@ namespace cloudscribe.DbHelpers
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             return ExecuteReader(
                 connectionString, 
                 commandType, 
@@ -484,7 +491,7 @@ namespace cloudscribe.DbHelpers
                         commandText,
                         commandParameters);
 
-                if(commandTimeout != 30)
+                if(commandTimeout != defaultTimeoutSeconds)
                 {
                     command.CommandTimeout = commandTimeout;
                 }
@@ -521,7 +528,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             return await ExecuteReaderAsync(
                 connectionString,
                 CommandType.Text,
@@ -539,7 +546,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             return await ExecuteReaderAsync(
                 connectionString,
                 commandType,
@@ -581,7 +588,7 @@ namespace cloudscribe.DbHelpers
                         commandText,
                         commandParameters);
 
-                if(commandTimeout != 30)
+                if(commandTimeout != defaultTimeoutSeconds)
                 {
                     command.CommandTimeout = commandTimeout;
                 }
@@ -620,7 +627,7 @@ namespace cloudscribe.DbHelpers
             string commandText,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             bool useTransaction = false;
             return ExecuteScalar(
                 connectionString, 
@@ -639,7 +646,7 @@ namespace cloudscribe.DbHelpers
             bool useTransaction,
             params DbParameter[] commandParameters)
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             return ExecuteScalar(
                 connectionString,
                 commandType,
@@ -699,7 +706,7 @@ namespace cloudscribe.DbHelpers
 
                     //ArgumentException: SqlCeCommand.CommandTimeout does not support non-zero values.
 
-                    if (commandTimeout != 30)
+                    if (commandTimeout != defaultTimeoutSeconds)
                     {
                         command.CommandTimeout = commandTimeout;
                     }
@@ -725,7 +732,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             bool useTransaction = false;
             return await ExecuteScalarAsync(
                 connectionString,
@@ -745,7 +752,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             bool useTransaction = false;
             return await ExecuteScalarAsync(
                 connectionString,
@@ -766,7 +773,7 @@ namespace cloudscribe.DbHelpers
             DbParameter[] commandParameters,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            int commandTimeout = 30; //30 seconds default
+            int commandTimeout = defaultTimeoutSeconds; 
             return await ExecuteScalarAsync(
                 connectionString,
                 commandType,
@@ -828,7 +835,7 @@ namespace cloudscribe.DbHelpers
                         commandText, 
                         commandParameters);
 
-                    if (commandTimeout != 30)
+                    if (commandTimeout != defaultTimeoutSeconds)
                     {
                         command.CommandTimeout = commandTimeout;
                     }
