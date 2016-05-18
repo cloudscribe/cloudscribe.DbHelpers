@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("cloudscribe.DbHelpers.Ado")]
+[assembly: AssemblyProduct("cloudscribe.DbHelpers.Sqlite")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bfdd5e0f-f49e-4f6d-b57b-d9b7ca773716")]
+[assembly: Guid("9a70ae53-2147-4432-8c91-6ffe9850b945")]

@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E4A38A39-7D98-4F51-B39B-933ACE2BFE6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C7372D8A-A908-41C8-86AD-E517AD9DCB92}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Ado", "src\cloudscribe.DbHelpers.Ado\cloudscribe.DbHelpers.Ado.xproj", "{BFDD5E0F-F49E-4F6D-B57B-D9B7CA773716}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.MSSQL", "src\cloudscribe.DbHelpers.MSSQL\cloudscribe.DbHelpers.MSSQL.xproj", "{F333B78B-692D-460B-94C9-78BF7899CEC7}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Sqlite", "src\cloudscribe.DbHelpers.Sqlite\cloudscribe.DbHelpers.Sqlite.xproj", "{9A70AE53-2147-4432-8C91-6FFE9850B945}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.SqlCe", "src\cloudscribe.DbHelpers.SqlCe\cloudscribe.DbHelpers.SqlCe.xproj", "{BC22A32F-BA93-4006-93E9-A23F609E3BE1}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "cloudscribe.DbHelpers.Firebird", "src\cloudscribe.DbHelpers.Firebird\cloudscribe.DbHelpers.Firebird.xproj", "{43B4E045-F654-4DD0-9F10-A5F67F6926FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFDD5E0F-F49E-4F6D-B57B-D9B7CA773716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFDD5E0F-F49E-4F6D-B57B-D9B7CA773716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFDD5E0F-F49E-4F6D-B57B-D9B7CA773716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFDD5E0F-F49E-4F6D-B57B-D9B7CA773716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F333B78B-692D-460B-94C9-78BF7899CEC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F333B78B-692D-460B-94C9-78BF7899CEC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F333B78B-692D-460B-94C9-78BF7899CEC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F333B78B-692D-460B-94C9-78BF7899CEC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A70AE53-2147-4432-8C91-6FFE9850B945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A70AE53-2147-4432-8C91-6FFE9850B945}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A70AE53-2147-4432-8C91-6FFE9850B945}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A70AE53-2147-4432-8C91-6FFE9850B945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC22A32F-BA93-4006-93E9-A23F609E3BE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC22A32F-BA93-4006-93E9-A23F609E3BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC22A32F-BA93-4006-93E9-A23F609E3BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC22A32F-BA93-4006-93E9-A23F609E3BE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43B4E045-F654-4DD0-9F10-A5F67F6926FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43B4E045-F654-4DD0-9F10-A5F67F6926FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43B4E045-F654-4DD0-9F10-A5F67F6926FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43B4E045-F654-4DD0-9F10-A5F67F6926FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFDD5E0F-F49E-4F6D-B57B-D9B7CA773716} = {E4A38A39-7D98-4F51-B39B-933ACE2BFE6B}
+		{F333B78B-692D-460B-94C9-78BF7899CEC7} = {E4A38A39-7D98-4F51-B39B-933ACE2BFE6B}
+		{9A70AE53-2147-4432-8C91-6FFE9850B945} = {E4A38A39-7D98-4F51-B39B-933ACE2BFE6B}
+		{BC22A32F-BA93-4006-93E9-A23F609E3BE1} = {E4A38A39-7D98-4F51-B39B-933ACE2BFE6B}
+		{43B4E045-F654-4DD0-9F10-A5F67F6926FE} = {E4A38A39-7D98-4F51-B39B-933ACE2BFE6B}
+	EndGlobalSection
+EndGlobal

@@ -2,26 +2,26 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 // Author:					Joe Audette
 // Created:					2014-06-22
-// Last Modified:			2016-01-03
+// Last Modified:			2016-05-18
 // 
 
-using Microsoft.Extensions.OptionsModel;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace cloudscribe.DbHelpers.SqlCe
 {
     public class SqlCeConnectionStringResolver
     {
         public SqlCeConnectionStringResolver(
-            IApplicationEnvironment appEnv,
+            IHostingEnvironment appEnv,
             IOptions<SqlCeConnectionOptions> configuration)
         {
             if (configuration == null) { throw new ArgumentNullException(nameof(configuration)); }
             if (appEnv == null) { throw new ArgumentNullException(nameof(appEnv)); }
 
-            appBasePath = appEnv.ApplicationBasePath;
+            appBasePath = appEnv.ContentRootPath;
             options = configuration.Value;
 
         }

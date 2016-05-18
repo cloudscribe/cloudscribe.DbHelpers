@@ -8,7 +8,7 @@
 using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlServerCe;
+//using System.Data.SqlServerCe;
 using System.Threading.Tasks;
 
 namespace cloudscribe.DbHelpers
