@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.0.0-beta6",
+    "version": "1.0.0-beta7",
     "description": "cloudscribe database helpers for SqlServer Compact",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -23,7 +23,7 @@
 
     "frameworks": {
         "netstandard1.5": {
-            "imports": "dnxcore50"
+            "imports": "net452"
         }
     }
 }
