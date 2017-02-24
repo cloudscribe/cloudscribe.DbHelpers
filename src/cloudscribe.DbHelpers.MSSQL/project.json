@@ -1,5 +1,5 @@
 ﻿{
-    "version": "1.1.0-rc20161207",
+    "version": "1.1.0-rc20161208",
     "description": "cloudscribe database helpers for MS SQL and SqlAzure",
     "authors": [ "Joe Audette" ],
     "packOptions": {
@@ -17,7 +17,7 @@
     "dependencies": {
         "NETStandard.Library": "1.6.1",
         "cloudscribe.DbHelpers.Ado": "1.1.0-*",
-        "System.Data.SqlClient": "4.1.0",
+        "System.Data.SqlClient": "4.3.0",
         "Microsoft.Extensions.Logging.Abstractions": "1.1.*",
         "Microsoft.Extensions.Options": "1.1.*"
     },
