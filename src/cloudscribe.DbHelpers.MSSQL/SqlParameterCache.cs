@@ -13,6 +13,8 @@
 // with modifications by Joe Audette
 // Last Modified: 2010-01-27
 
+using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Data.SqlClient;
 
@@ -29,10 +31,10 @@ namespace cloudscribe.DbHelpers
         private SqlParameterCache() { }
 
         //private Hashtable paramCache = Hashtable.Synchronized(new Hashtable());
-        //private static Hashtable paramCache = Hashtable.Synchronized(new Hashtable());
+        private static Hashtable paramCache = Hashtable.Synchronized(new Hashtable());
 
-        private static ConcurrentDictionary<string, SqlParameter[]> paramCache 
-            = new ConcurrentDictionary<string, SqlParameter[]>();
+        //private static ConcurrentDictionary<string, SqlParameter[]> paramCache 
+        //    = new ConcurrentDictionary<string, SqlParameter[]>();
 
         /// <devdoc>
         /// Create and return a copy of the IDataParameter array.
@@ -43,9 +45,8 @@ namespace cloudscribe.DbHelpers
 
             for (int i = 0, j = originalParameters.Length; i < j; i++)
             {
-                // ICloneable not supported in .net core
-                //clonedParameters[i] = (SqlParameter)((ICloneable)originalParameters[i]).Clone();
-                clonedParameters[i] = ((SqlParameter)originalParameters[i]).Copy();
+                clonedParameters[i] = (SqlParameter)((ICloneable)originalParameters[i]).Clone();
+                //clonedParameters[i] = ((SqlParameter)originalParameters[i]).Copy();
             }
 
             return clonedParameters;

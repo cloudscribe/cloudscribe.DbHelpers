@@ -1,7 +1,7 @@
 ﻿// 2015-12-31 Joe Audette refactored this as an instance class based on the very similar but platform specific
 // static helpers that we had in mojoportal and currently have in cloudscribe
 
-//Last Modified:    2016-01-02
+//Last Modified:    2018-02-14
 
 // next step will be to make the cloudscribe repository implementations use the new instance class and migrate away from
 // the old platform specific static helpers
@@ -31,6 +31,7 @@
 
 
 using System;
+using System.Collections;
 using System.Data;
 using System.Data.Common;
 using System.Threading;
@@ -476,44 +477,35 @@ namespace cloudscribe.DbHelpers
             {
                 //connection = new SqlConnection(connectionString);
                 connection = GetConnection(connectionString);
-
                 connection.Open();
 
                 DbCommand command = factory.CreateCommand();
-                // this using was causing the connection to be closed before reader could read with firebird
-                //using (DbCommand command = factory.CreateCommand())
-                //{
-                    PrepareCommand(
-                        command,
-                        connection,
-                        null,
-                        commandType,
-                        commandText,
-                        commandParameters);
+                
+                PrepareCommand(
+                    command,
+                    connection,
+                    null,
+                    commandType,
+                    commandText,
+                    commandParameters);
 
                 if(commandTimeout != defaultTimeoutSeconds)
                 {
                     command.CommandTimeout = commandTimeout;
                 }
                     
+                // 2015-11-10 CommandBehavior.CloseConnection throws exception
+                // should be fixed either in rc1 rc2 or 1.0.0
+                //https://github.com/aspnet/Microsoft.Data.Sqlite/pull/169
 
-                    // 2015-11-10 CommandBehavior.CloseConnection throws exception
-                    // should be fixed either in rc1 rc2 or 1.0.0
-                    //https://github.com/aspnet/Microsoft.Data.Sqlite/pull/169
-
-                    try
-                    {
-                        return command.ExecuteReader(CommandBehavior.CloseConnection);
-                    }
-                    catch(ArgumentException)
-                    {
-                        return command.ExecuteReader(CommandBehavior.Default);
-                    }
-                    
-
-                    
-                //}
-
+                try
+                {
+                    return command.ExecuteReader(CommandBehavior.CloseConnection);
+                }
+                catch(ArgumentException)
+                {
+                    return command.ExecuteReader(CommandBehavior.Default);
+                }
             }
             catch
             {
@@ -607,6 +599,8 @@ namespace cloudscribe.DbHelpers
         }
 
         #endregion
+
+        #region Execute Scalar
 
         public object ExecuteScalar(
             string connectionString,
@@ -853,6 +847,102 @@ namespace cloudscribe.DbHelpers
                     return result;
                 }
             }
+        }
+
+        #endregion
+
+        public DataSet ExecuteDataset(string connectionString, CommandType commandType, string commandText)
+        {
+            return ExecuteDataset(connectionString, commandType, commandText, defaultTimeoutSeconds,(DbParameter[])null);
+        }
+
+        public DataSet ExecuteDataset(
+            string connectionString, 
+            CommandType commandType, 
+            string commandText,
+            int commandTimeout,
+            params DbParameter[] commandParameters)
+        {
+            if (connectionString == null || connectionString.Length == 0) throw new ArgumentNullException("connectionString");
+
+            using (DbConnection connection = GetConnection(connectionString))
+            {
+                connection.Open();
+
+                DbCommand command = factory.CreateCommand();
+               
+                PrepareCommand(
+                    command,
+                    connection,
+                    null,
+                    commandType,
+                    commandText,
+                    commandParameters);
+
+                if (commandTimeout != defaultTimeoutSeconds)
+                {
+                    command.CommandTimeout = commandTimeout;
+                }
+
+                
+                using (var adapter = factory.CreateDataAdapter())
+                {
+                    adapter.SelectCommand = command;
+                    DataSet dataSet = new DataSet();
+                    adapter.Fill(dataSet);
+                    return dataSet;
+                }
+                
+            }
+        }
+
+        public DataTable GetTableFromDataReader(IDataReader reader)
+        {
+            DataTable dataTable = new DataTable();
+            DataColumn column;
+            DataRow row;
+            ArrayList arrayList = new ArrayList();
+
+            try
+            {
+                DataTable schemaTable = reader.GetSchemaTable();
+
+                for (int i = 0; i < schemaTable.Rows.Count; i++)
+                {
+
+                    column = new DataColumn();
+
+                    if (!dataTable.Columns.Contains(schemaTable.Rows[i]["ColumnName"].ToString()))
+                    {
+
+                        column.ColumnName = schemaTable.Rows[i]["ColumnName"].ToString();
+                        column.AllowDBNull = Convert.ToBoolean(schemaTable.Rows[i]["AllowDBNull"]);
+                        column.ReadOnly = Convert.ToBoolean(schemaTable.Rows[i]["IsReadOnly"]);
+                        arrayList.Add(column.ColumnName);
+                        dataTable.Columns.Add(column);
+                    }
+
+                }
+
+                while (reader.Read())
+                {
+                    row = dataTable.NewRow();
+
+                    for (int i = 0; i < arrayList.Count; i++)
+                    {
+                        row[((string)arrayList[i])] = reader[(string)arrayList[i]];
+                    }
+
+                    dataTable.Rows.Add(row);
+
+                }
+            }
+            finally
+            {
+                reader.Close();
+            }
+
+            return dataTable;
         }
 
     }
