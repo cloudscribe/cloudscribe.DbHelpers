@@ -856,6 +856,11 @@ namespace cloudscribe.DbHelpers
             return ExecuteDataset(connectionString, commandType, commandText, defaultTimeoutSeconds,(DbParameter[])null);
         }
 
+        public DataSet ExecuteDataset(string connectionString, CommandType commandType, string commandText, params DbParameter[] commandParameters)
+        {
+            return ExecuteDataset(connectionString, commandType, commandText, defaultTimeoutSeconds, commandParameters);
+        }
+
         public DataSet ExecuteDataset(
             string connectionString, 
             CommandType commandType, 

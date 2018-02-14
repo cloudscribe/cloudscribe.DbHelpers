@@ -303,8 +303,23 @@ namespace cloudscribe.DbHelpers
             return await AdoHelper.ExecuteScalarAsync(connectionString, cmdType, commandText, commandTimeout, arParams, cancellationToken);
         }
 
+        public DataSet ExecuteDataset()
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            //if (debugLog) { log.Debug("ExecuteDataSet " + commandText); }
+            return AdoHelper.ExecuteDataset(connectionString, cmdType, commandText, arParams);
+        }
 
-        
+        public async Task<DataTable> ExecuteDataTableAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Debug.Assert((arParams.Length == index) && (paramCnt == index), "not all parameters were defined");
+            //if (debugLog) { log.Debug("ExecuteReader " + commandText); }
+            if (log != null) log.LogDebug("ExecuteReader " + commandText);
+            var reader =  await AdoHelper.ExecuteReaderAsync(connectionString, cmdType, commandText, arParams, cancellationToken);
+            return AdoHelper.GetTableFromDataReader(reader);
+        }
+
+
 
         public SqlParameter[] Parameters
         {
