@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Description>Helper class for ADO.NET</Description>
-    <VersionPrefix>2.0.2</VersionPrefix>
-    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <VersionPrefix>2.0.4</VersionPrefix>
+    <AssemblyVersion>2.0.4</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>cloudscribe.DbHelpers.Ado</AssemblyName>

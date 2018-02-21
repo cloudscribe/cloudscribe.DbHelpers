@@ -921,8 +921,15 @@ namespace cloudscribe.DbHelpers
                     {
 
                         column.ColumnName = schemaTable.Rows[i]["ColumnName"].ToString();
-                        column.AllowDBNull = Convert.ToBoolean(schemaTable.Rows[i]["AllowDBNull"]);
-                        column.ReadOnly = Convert.ToBoolean(schemaTable.Rows[i]["IsReadOnly"]);
+                        if(schemaTable.Rows[i]["AllowDBNull"] != DBNull.Value)
+                        {
+                            column.AllowDBNull = Convert.ToBoolean(schemaTable.Rows[i]["AllowDBNull"]);
+                        }
+                        if(schemaTable.Rows[i]["IsReadOnly"] != DBNull.Value)
+                        {
+                            column.ReadOnly = Convert.ToBoolean(schemaTable.Rows[i]["IsReadOnly"]);
+                        }
+                        
                         arrayList.Add(column.ColumnName);
                         dataTable.Columns.Add(column);
                     }
@@ -935,7 +942,7 @@ namespace cloudscribe.DbHelpers
 
                     for (int i = 0; i < arrayList.Count; i++)
                     {
-                        row[((string)arrayList[i])] = reader[(string)arrayList[i]];
+                        row[((string)arrayList[i])] = reader[(string)arrayList[i]].ToString() ;
                     }
 
                     dataTable.Rows.Add(row);

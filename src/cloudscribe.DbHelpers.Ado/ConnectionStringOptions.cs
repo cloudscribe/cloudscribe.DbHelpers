@@ -23,7 +23,7 @@ namespace cloudscribe.DbHelpers
         {
             get
             {
-                if (readConnectionString.Length > 0) { return readConnectionString; }
+                if (!string.IsNullOrWhiteSpace(readConnectionString)) { return readConnectionString; }
                 return connectionString;
             }
             set { readConnectionString = value; }
@@ -35,7 +35,7 @@ namespace cloudscribe.DbHelpers
         {
             get
             {
-                if (writeConnectionString.Length > 0) { return writeConnectionString; }
+                if (!string.IsNullOrWhiteSpace(writeConnectionString)) { return writeConnectionString; }
                 return connectionString;
             }
             set { writeConnectionString = value; }
