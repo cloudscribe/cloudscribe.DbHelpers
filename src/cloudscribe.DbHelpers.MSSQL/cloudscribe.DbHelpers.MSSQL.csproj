@@ -2,12 +2,10 @@
 
   <PropertyGroup>
     <Description>cloudscribe database helpers for MS SQL and SqlAzure</Description>
-    <VersionPrefix>2.0.2</VersionPrefix>
-    <AssemblyVersion>2.0.2</AssemblyVersion>
+    <VersionPrefix>2.1.0</VersionPrefix>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
     <Authors>Joe Audette</Authors>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <AssemblyName>cloudscribe.DbHelpers.MSSQL</AssemblyName>
-    <PackageId>cloudscribe.DbHelpers.MSSQL</PackageId>
     <PackageTags>cloudscribe;mssql</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/joeaudette/cloudscribe/master/cloudscribe-icon-32.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/joeaudette/cloudscribe.DbHelpers</PackageProjectUrl>
@@ -20,13 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.*" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.*" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
+  
 </Project>
