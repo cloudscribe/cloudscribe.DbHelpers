@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.*" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.*" />
   </ItemGroup>
