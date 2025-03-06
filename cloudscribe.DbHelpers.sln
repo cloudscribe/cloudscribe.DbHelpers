@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DbHelpers.Ado",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DbHelpers.MSSQL", "src\cloudscribe.DbHelpers.MSSQL\cloudscribe.DbHelpers.MSSQL.csproj", "{F333B78B-692D-460B-94C9-78BF7899CEC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DbHelpers.Sqlite", "src\cloudscribe.DbHelpers.Sqlite\cloudscribe.DbHelpers.Sqlite.csproj", "{9A70AE53-2147-4432-8C91-6FFE9850B945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DbHelpers.Sqlite", "src\cloudscribe.DbHelpers.SQLite\cloudscribe.DbHelpers.Sqlite.csproj", "{9A70AE53-2147-4432-8C91-6FFE9850B945}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cloudscribe.DbHelpers.SqlCe", "src\cloudscribe.DbHelpers.SqlCe\cloudscribe.DbHelpers.SqlCe.csproj", "{BC22A32F-BA93-4006-93E9-A23F609E3BE1}"
 EndProject
