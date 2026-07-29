@@ -16,7 +16,7 @@
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 //namespace Microsoft.Practices.EnterpriseLibrary.Data
 namespace cloudscribe.DbHelpers
